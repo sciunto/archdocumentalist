@@ -58,6 +58,8 @@
 use warnings;
 use strict;
 
+my $VERSION="0.1"
+
 sub usage
 {
 	print "Usage: archdocumentalist.pl LANGUAGE\nwhere LANGUAGE is a valid Language.\n" ;
@@ -74,7 +76,6 @@ my $LANGUAGE=$ARGV[0]; #Declare before use LWP::Simple to avoid errors
 
 use Encode;
 use JSON::XS;
-#use Attribute::Constant;
 use LWP::Simple;
 
 my $DATADIR="arch-wiki-".$LANGUAGE."/"; #Directory for data
