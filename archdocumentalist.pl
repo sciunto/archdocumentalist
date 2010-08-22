@@ -147,5 +147,5 @@ while()
 open (INDEX,">>:utf8",$indexfile) or die "cannot open index.html";
 print INDEX "</BODY></HTML>";
 close(INDEX);
-print "Done.\nDocumentation generated in ".$DATADIR."\n"
+print "Done.\nDocumentation generated in ".$DATADIR."\n";
 exit(0);
