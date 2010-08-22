@@ -1,0 +1,26 @@
+
+
+pkgname=archdocumentalist
+pkgver=0.1
+pkgrel=1
+pkgdesc="Generate a snapshot of archlinux wiki for a language"
+arch=('any')
+url="http://github.com/sciunto/archdocumentalist"
+license=('GPL')
+groups=
+provides=
+depends=('perl' 'perl-json-xs' 'perl-libwww')
+makedepends=()
+conflicts=
+replaces=()
+backup=()
+source=''
+md5sums=('')
+
+build(){
+	cd $srcdir/$pkgname-$pkgver
+	install -d ${pkgdir}/usr/share/archdocumentalist/ || return 1
+	install -Dm755 ${pkgname}.pl ${pkgdir}/usr/bin/ || return 1
+}
+
+

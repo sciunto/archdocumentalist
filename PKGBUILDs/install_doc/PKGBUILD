@@ -1,0 +1,24 @@
+# Packager: Francois Boulogne <fboulogne at april dot org>
+
+pkgname=arch-wiki-snapshot
+pkgver=20100821
+pkgrel=1
+pkgdesc="Documentation from wiki.archlinux.org"
+arch=('any')
+makedepends=(perl perl-json-xs perl-libwww)
+url="http://wiki.archlinux.org"
+license=('FDL')
+options=(docs)
+source=()
+md5sums=()
+  
+language='English'
+
+build() {
+  
+  mkdir -p $pkgdir/usr/share/doc/ || return 1
+  #generate the doc for $language
+  $srcdir/archdocumentalist.pl $language
+  #move doc into the correct path
+  cp -r $srcdir/arch-wiki-$language $pkgdir/usr/share/doc/
+}
