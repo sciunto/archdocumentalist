@@ -1,10 +1,17 @@
 Archdocumentalist generates wiki snapshots for a specific language.
 The snapshot is a collection of html pages which are indexed in index.html.
 
+USAGE:
+
+archdocumentalist LANGUAGE PATH
 
 DEPENDANCES:
+perl
 perl-json-xs
 perl-libwww
 
 
+ACKNOWLEDGEMENTS
+This script is based on the Sergej Pupykin's idea 
+http://www.archlinux.org/packages/community/any/arch-wiki-docs/
 
