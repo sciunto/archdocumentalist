@@ -1,0 +1,10 @@
+Archdocumentalist generates wiki snapshots for a specific language.
+The snapshot is a collection of html pages which are indexed in index.html.
+
+
+DEPENDANCES:
+perl-json-xs
+perl-libwww
+
+
+
