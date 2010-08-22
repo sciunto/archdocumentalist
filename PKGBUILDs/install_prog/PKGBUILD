@@ -1,4 +1,4 @@
-
+#Maintainer: Francois Boulogne <fboulogne at april dot org>
 
 pkgname=archdocumentalist
 pkgver=0.1
@@ -14,13 +14,12 @@ makedepends=()
 conflicts=
 replaces=()
 backup=()
-source=''
-md5sums=('')
+source='http://github.com/downloads/sciunto/archdocumentalist/archdocumentalist-0.1.tar.gz'
+md5sums=('dd7862781a8b33e61bc0cceec249579d')
 
 build(){
 	cd $srcdir/$pkgname-$pkgver
-	install -d ${pkgdir}/usr/share/archdocumentalist/ || return 1
-	install -Dm755 ${pkgname}.pl ${pkgdir}/usr/bin/ || return 1
+	install -Dm755 ${pkgname}.pl ${pkgdir}/usr/bin/${pkgname}.pl || return 1
 }
 
 
