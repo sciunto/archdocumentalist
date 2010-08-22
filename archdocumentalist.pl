@@ -58,27 +58,31 @@
 use warnings;
 use strict;
 
-my $VERSION="0.1"
+my $VERSION="0.1";
 
 sub usage
 {
-	print "Usage: archdocumentalist.pl LANGUAGE\nwhere LANGUAGE is a valid Language.\n" ;
-	print "Read the source file for a list of available languages.\n"
+	print "Usage: archdocumentalist.pl LANGUAGE PATH\nwhere LANGUAGE is a valid Language.\n" ;
+	print "Read the source file for a list of available languages.\n";
+	print "PATH is the output path\n";
 }
 
-if ($#ARGV==-1)
+if ($#ARGV!=1) # 1 = 2 args
 {
 	usage();
 	exit(0);
 }
 
 my $LANGUAGE=$ARGV[0]; #Declare before use LWP::Simple to avoid errors
+my $PATH=$ARGV[1]; #Declare before use LWP::Simple to avoid errors
+unless ($PATH=~m/.*\/$/) {$PATH.='/';} #Complete the path with a / if needed
 
 use Encode;
 use JSON::XS;
 use LWP::Simple;
 
-my $DATADIR="arch-wiki-".$LANGUAGE."/"; #Directory for data
+
+my $DATADIR=$PATH."arch-wiki-".$LANGUAGE."/"; #Directory for data
 mkdir $DATADIR; 
 my $indexfile=$DATADIR."index.html"; #index file
 
@@ -104,7 +108,6 @@ while()
 	{
 		my $title=encode("utf8","$_->{title}");
 		$from=$title; #Do not modify this variable. No perl module for constant in extra/community...
-
 		#Detect the language of the current page
 		my $lang=$title;
 		my $index_entry = $title;
@@ -144,4 +147,5 @@ while()
 open (INDEX,">>:utf8",$indexfile) or die "cannot open index.html";
 print INDEX "</BODY></HTML>";
 close(INDEX);
-exit 0;
+print "Done.\nDocumentation generated in ".$DATADIR."\n"
+exit(0);
