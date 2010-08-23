@@ -18,53 +18,53 @@
 
 
 # Available languages on http://wiki.archlinux
-# ไทย
-# Česky
-# Dansk
-# Deutsch
-# English
-# Español
-# Français
-# Indonesia
-# Italiano
-# Italiano in corso
-# Italitan
-# Lietuviškai
-# Magyar
-# Nederlands
-# Polski
-# Português
-# Pусский
-# Română
-# Russian
-# Slovenský
-# Srpski
-# Suomi
-# Svenska
-# Türkçe
 #  עברית #
-# Ελληνικά
-# Български
-# русский
-# Русский
-# Српски
-# Українська
 # ФОС
-# 日本語
-# 正體中文
-# 简体中文
-# 繁體中文
+
+#Country codes come from http://en.wikipedia.org/wiki/ISO_3166-1
+my %lang_hash=(
+'Български',	 'BG',
+'正體中文',		 'CN',
+'简体中文',		 'CN',
+'繁體中文', 	 'CN',
+'Česky',         'CZ', 
+'Dansk',         'DK', 
+'Deutsch',       'DE', 
+'English',       'EN', 
+'Español',       'ES', 
+'Suomi',         'FI', 
+'Français',      'FR', 
+'Ελληνικά',      'GR', 
+'Srpski',		 'HR',
+'Magyar',        'HU', 
+'Indonesia',     'ID', 
+'Italiano',      'IT', 
+'日本語',        'JP', 
+'Lietuviškai',   'LT', 
+'Nederlands',    'NL', 
+'Polski',        'PL', 
+'Português',     'PT', 
+'Română',        'RO', 
+'Српски',        'RS', 
+'Russian',       'RU', 
+'Русский',		 'RU',
+'Svenska',       'SE', 
+'Slovenský',     'SK', 
+'ไทย',           'TH',     
+'Türkçe',        'TR', 
+'Українська',    'UA' 
+				);
 
 use warnings;
 use strict;
 
-my $VERSION="0.1";
+my $VERSION="0.2";
 
 sub usage
 {
-	print "Usage: archdocumentalist.pl LANGUAGE PATH\nwhere LANGUAGE is a valid Language.\n" ;
-	print "Read the source file for a list of available languages.\n";
-	print "PATH is the output path\n";
+	print "Usage: archdocumentalist.pl LANGUAGE PATH\nwhere\n\tLANGUAGE is a valid language code (EN, FR, DE...).\n" ;
+	print "\tSee http://en.wikipedia.org/wiki/ISO_3166-1\n";
+	print "\tPATH is the output path\n";
 }
 
 if ($#ARGV!=1) # 1 = 2 args
@@ -73,7 +73,28 @@ if ($#ARGV!=1) # 1 = 2 args
 	exit(0);
 }
 
-my $LANGUAGE=$ARGV[0]; #Declare before use LWP::Simple to avoid errors
+my $LANGUAGE=uc($ARGV[0]); #Declare before use LWP::Simple to avoid errors
+
+#Check and find the language
+my @langs;
+while (my ($key,$value) = each(%lang_hash) ) 
+{
+	if ( $LANGUAGE eq $value )
+	{
+		push(@langs, $key);
+	}
+}
+if ($#langs==-1)
+{
+	print "Wrong language.\n";
+	print "Use one of the following standard code\n";
+	for (keys %lang_hash) { print "$_ => $lang_hash{$_}\n"; }
+	print "If you find a mistake or a missing item. Please, open a bug report at http://github.com/sciunto/archdocumentalist\n";
+	usage();
+	exit(0);
+}
+
+#Path
 my $PATH=$ARGV[1]; #Declare before use LWP::Simple to avoid errors
 unless ($PATH=~m/.*\/$/) {$PATH.='/';} #Complete the path with a / if needed
 
@@ -95,6 +116,9 @@ my $from = "";
 my $count = 0;
 use constant TITLE => $from;
 
+
+print "Download pages... it might take a while.\n";
+
 #loop on different pages. Stop when $count==1.
 while()
 {
@@ -109,34 +133,41 @@ while()
 		my $title=encode("utf8","$_->{title}");
 		$from=$title; #Do not modify this variable. No perl module for constant in extra/community...
 		#Detect the language of the current page
-		my $lang=$title;
+		my $page_lang=$title;
 		my $index_entry = $title;
-		if ($lang=~ m/.*\((.*)\)/)
+		if ($page_lang=~ m/.*\((.*)\)/)
 		{
-			$lang=~ s/.*\((.*)\)/$1/;
-			$index_entry =~ s/(.*)\($lang\)/$1/;
+			$page_lang=~ s/.*\((.*)\)/$1/;
+			$index_entry =~ s/(.*)\($page_lang\)/$1/;
 		}
 		else 
 		{
-			$lang="English"; #Default language
+			$page_lang="English"; #Default language
 		}
-
-		#Save the page if language is OK.		
-		if($lang eq $LANGUAGE)
+		
+		#loop on @langs: positive strings in titles
+		for my $lang (@langs)
 		{
-			#Download the wiki page
-			my $link="http://wiki.archlinux.org/index.php?title=".$title ."&printable=yes";
-			my $doc = get($link); #Download the page
-			
-			#Save the page
-			my $fname=$DATADIR.$_->{pageid}.'.html';
-			open (FILE,">:utf8",$fname) or die "cannot open file $fname";
-			print FILE $doc;
-			close(FILE);
+			#Save the page if language is OK.		
+			if($lang eq $page_lang)
+			{
+				#Download the wiki page
+				my $link="http://wiki.archlinux.org/index.php?title=".$title ."&printable=yes";
+				my $doc = get($link); #Download the page
+				
+				if ($doc != undef)
+				{
+					#Save the page
+					my $fname=$DATADIR.$_->{pageid}.'.html';
+					open (FILE,">:utf8",$fname) or die "cannot open file $fname";
+					print FILE $doc;
+					close(FILE);
 
-			open (INDEX,">>:utf8",$indexfile) or die "cannot open index.html";
-			print INDEX "<P><A HREF=\'".$_->{pageid}.".html\'>".$index_entry."</A>\n"; 
-			close(INDEX);
+					open (INDEX,">>:utf8",$indexfile) or die "cannot open index.html";
+					print INDEX "<P><A HREF=\'".$_->{pageid}.".html\'>".$index_entry."</A>\n"; 
+					close(INDEX);
+				}
+			}
 		}
 		$count++;
 	}
