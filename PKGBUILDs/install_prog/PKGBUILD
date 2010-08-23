@@ -1,21 +1,20 @@
 #Maintainer: Francois Boulogne <fboulogne at april dot org>
 
 pkgname=archdocumentalist
-pkgver=0.1
-pkgrel=1
+pkgver=0.2
+pkgrel=2
 pkgdesc="Generate a snapshot of archlinux wiki for a language"
 arch=('any')
 url="http://github.com/sciunto/archdocumentalist"
 license=('GPL')
 groups=
-provides=
 depends=('perl' 'perl-json-xs' 'perl-libwww')
 makedepends=()
-conflicts=
 replaces=()
 backup=()
-source='http://github.com/downloads/sciunto/archdocumentalist/archdocumentalist-0.1.tar.gz'
-md5sums=('dd7862781a8b33e61bc0cceec249579d')
+source=(http://github.com/downloads/sciunto/archdocumentalist/archdocumentalist-${pkgver}.tar.gz)
+md5sums=('087c529b5cda29cf5d60367630a1b066') 
+install=archdocumentalist.install
 
 build(){
 	cd $srcdir/$pkgname-$pkgver
