@@ -155,7 +155,7 @@ while()
 				my $link="http://wiki.archlinux.org/index.php?title=".$title ."&printable=yes";
 				my $doc = get($link); #Download the page
 				
-				if ($doc != undef)
+				if (defined $doc)
 				{
 					#Save the page
 					my $fname=$DATADIR.$_->{pageid}.'.html';
