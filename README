@@ -4,6 +4,11 @@ The snapshot is a collection of html pages which are indexed in index.html.
 USAGE:
 archdocumentalist LANGUAGE PATH
 
+where 
+	LANGUAGE is a valid language code (EN, FR, DE...)
+	See http://en.wikipedia.org/wiki/ISO_3166-1
+	PATH: output path
+
 DEPENDANCES:
 perl
 perl-json-xs
