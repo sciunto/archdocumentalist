@@ -1,3 +1,10 @@
+WARNING!
+
+Since the policy about i18n on archlinux wiki has changed, this script
+is irrelevant. However, I keep it online as an example and maybe for further developments.
+
+
+
 Archdocumentalist generates wiki snapshots for a specific language.
 The snapshot is a collection of html pages which are indexed in index.html.
 
